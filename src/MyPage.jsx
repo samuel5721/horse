@@ -117,7 +117,7 @@ function MyPage() {
         </div>
       ) : (
         // 베팅 폼 표시
-        <div>
+        <div style={{display:'flex', flexDirection:'row', height:'50px'}}>
           <select
             value={selectedColor}
             onChange={(e) => setSelectedColor(e.target.value)}
@@ -129,6 +129,7 @@ function MyPage() {
           </select>
           <p>이 이긴다에</p>
           <input
+            style={{width:'50px'}}
             type="number"
             value={betAmount}
             onChange={(e) => setBetAmount(e.target.value)}

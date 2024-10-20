@@ -38,7 +38,7 @@ function Home() {
   };
 
   return (
-    <div>
+    <div style={{marginLeft:'20px',}}>
       <h3>학번을 입력하세요</h3>
       <input
         type="text"
