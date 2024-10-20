@@ -106,7 +106,7 @@ function MyPage() {
   return (
     <div>
       <h1>{studentNumber}님, 환영합니다!</h1>
-      <h2>Your Money: {money}원</h2>
+      <h2>Your 당근: {money}당근</h2>
 
       {isBet ? (
         // 베팅 현황 표시
