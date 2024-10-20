@@ -17,6 +17,22 @@ const Admin = () => {
   const [users, setUsers] = useState([]);
   const [stats, setStats] = useState(null);
   const [logs, setLogs] = useState([]);
+  const [authenticated, setAuthenticated] = useState(false);
+
+  // 비밀번호 확인 함수
+  useEffect(() => {
+    const checkPassword = () => {
+      const password = prompt('관리자 비밀번호를 입력하세요:');
+      if (password === 'your_admin_password') {
+        setAuthenticated(true);
+      } else {
+        alert('비밀번호가 틀렸습니다.');
+        window.location.href = '/'; // 홈 페이지로 리다이렉트
+      }
+    };
+
+    checkPassword();
+  }, []);
 
   // 로그 저장 함수
   const logAction = async (action) => {
@@ -348,6 +364,10 @@ const Admin = () => {
       alert('로그 정보를 가져오는 중 오류가 발생했습니다.');
     }
   };
+
+  if (!authenticated) {
+    return null; // 인증되지 않은 경우 아무것도 렌더링하지 않음
+  }
 
   return (
     <div>
