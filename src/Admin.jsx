@@ -114,34 +114,35 @@ const Admin = () => {
   // 상금 분배 함수
   const distributePrizes = async () => {
     const winningColor = prompt('승리한 색상을 입력하세요 (red, yellow, green, blue):');
-
+  
     if (!winningColor) {
       alert('승리한 색상을 입력해야 합니다.');
       return;
     }
-
+  
     const validColors = ['red', 'yellow', 'green', 'blue'];
     if (!validColors.includes(winningColor.toLowerCase())) {
       alert('유효한 색상을 입력하세요 (red, yellow, green, blue).');
       return;
     }
-
+  
     try {
       // 모든 사용자 정보 가져오기
       const querySnapshot = await getDocs(collection(db, 'user'));
       const userList = [];
       let totalBet = 0;
       let totalWinningBet = 0;
-
+  
       querySnapshot.forEach((doc) => {
         const userData = { id: doc.id, ...doc.data() };
         userList.push(userData);
         totalBet += userData.bet;
-
+  
         if (userData.color === winningColor && userData.isBet) {
           totalWinningBet += userData.bet;
         }
       });
+  
       if (totalWinningBet === 0) {
         alert('승리한 색상에 베팅한 사용자가 없습니다.');
         // 배당률 저장 (배당률 0으로 설정)
@@ -175,7 +176,32 @@ const Admin = () => {
       });
   
       // 각 승리한 사용자에게 상금 분배
-      // ... 기존 코드 유지
+      for (const user of userList) {
+        const userRef = doc(db, 'user', user.id);
+  
+        if (user.color === winningColor && user.isBet) {
+          // 사용자 비율 계산
+          const userShare = (user.bet / totalWinningBet) * totalBet;
+  
+          // 사용자 돈 업데이트
+          await updateDoc(userRef, {
+            money: increment(userShare),
+            // 베팅 초기화
+            bet: 0,
+            color: 'none',
+            isBet: false,
+          });
+  
+          console.log(`${user.id}번 사용자에게 ${userShare.toFixed(2)}원이 지급되었습니다.`);
+        } else if (user.isBet) {
+          // 베팅 초기화
+          await updateDoc(userRef, {
+            bet: 0,
+            color: 'none',
+            isBet: false,
+          });
+        }
+      }
   
       alert('상금 분배가 완료되었습니다.');
       await logAction(`상금 분배 - 승리한 색상: ${winningColor}, 배당률: ${payoutRate.toFixed(2)}`);
@@ -186,6 +212,7 @@ const Admin = () => {
       alert('상금 분배 중 오류가 발생했습니다.');
     }
   };
+  
 
   // 모든 사용자들의 isBet을 false로 변경하는 함수
   const resetIsBetForAll = async () => {
