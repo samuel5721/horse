@@ -15,7 +15,6 @@ function MyPage() {
   const [betAmount, setBetAmount] = useState('');
   const [isBet, setIsBet] = useState(false);
   const [currentBet, setCurrentBet] = useState(null);
-  const [payoutRate, setPayoutRate] = useState(null);
 
   useEffect(() => {
     // 학번이 없으면 홈으로 리다이렉트
@@ -53,25 +52,6 @@ function MyPage() {
       };
 
       fetchUserData();
-
-      // 배당률 가져오기
-      const fetchPayoutRate = async () => {
-        try {
-          const payoutRateRef = doc(db, 'settings', 'latestPayoutRate');
-          const payoutRateSnap = await getDoc(payoutRateRef);
-
-          if (payoutRateSnap.exists()) {
-            const data = payoutRateSnap.data();
-            setPayoutRate(data.payoutRate);
-          } else {
-            console.log('배당률 정보를 가져올 수 없습니다.');
-          }
-        } catch (error) {
-          console.error('배당률 정보 가져오기 오류:', error);
-        }
-      };
-
-      fetchPayoutRate();
     }
   }, [studentNumber, navigate]);
 
@@ -120,21 +100,13 @@ function MyPage() {
   };
 
   if (!studentNumber) {
-    return null; // 또는 로딩 스피너 등을 표시할 수 있습니다.
+    return <div>wrong page</div>; // 또는 로딩 스피너 등을 표시할 수 있습니다.
   }
 
   return (
     <div>
       <h1>{studentNumber}님, 환영합니다!</h1>
       <h2>Your Money: {money}원</h2>
-
-      {/* 최근 배당률 표시 */}
-      {payoutRate !== null && (
-        <p>
-          최근 배당률:{' '}
-          {payoutRate === 0 ? '승자가 없습니다.' : payoutRate.toFixed(2)}
-        </p>
-      )}
 
       {isBet ? (
         // 베팅 현황 표시
