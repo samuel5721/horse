@@ -81,7 +81,7 @@ const Admin = () => {
       '27': 'cheese27',
       '28': 'woo28',
       '29': 'protein29',
-      '30': 'jinbang30',
+      '30': 'ducksurgery30',
       '31': 'wutan31',
     };
 
