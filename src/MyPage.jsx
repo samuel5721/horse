@@ -134,7 +134,7 @@ function MyPage() {
             value={betAmount}
             onChange={(e) => setBetAmount(e.target.value)}
           />
-          <p>만원</p>
+          <p>만 당근</p>
           <button onClick={handleSubmit}>제출</button>
         </div>
       )}
